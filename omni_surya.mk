@@ -15,8 +15,8 @@
 #
 
 # Release name
-PRODUCT_RELEASE_NAME := phoenix
-DEVICE_PATH := device/xiaomi/phoenix
+PRODUCT_RELEASE_NAME := surya
+DEVICE_PATH := device/xiaomi/surya
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base.mk)
 
@@ -27,8 +27,8 @@ PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(LOCAL_PATH)/recovery/roo
     $(LOCAL_PATH)/prebuilt/dtb:dtb.img
 
 ## Device identifier. This must come after all inclusions
-PRODUCT_DEVICE := phoenix
-PRODUCT_NAME := omni_phoenix
+PRODUCT_DEVICE := surya
+PRODUCT_NAME := omni_surya
 PRODUCT_BRAND := Xiaomi
 PRODUCT_MODEL := Poco X2
 PRODUCT_MANUFACTURER := Xiaomi
@@ -36,11 +36,3 @@ PRODUCT_MANUFACTURER := Xiaomi
 # HACK: Set vendor patch level
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.build.security_patch=2099-12-31
-
-PRODUCT_SYSTEM_PROPERTY_BLACKLIST += \
-    ro.product.device \
-    ro.product.name \
-    ro.build.product \
-    ro.bootimage.build.date.utc \
-    ro.build.date.utc
-

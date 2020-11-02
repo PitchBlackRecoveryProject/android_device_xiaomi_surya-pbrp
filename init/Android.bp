@@ -1,5 +1,5 @@
 cc_library_static {
-    name: "libinit_phoenix",
+    name: "libinit_surya",
     include_dirs: [
         "system/core/base/include",
         "system/core/init",
@@ -7,6 +7,6 @@ cc_library_static {
     cflags: [
         "-Wall",
     ],
-    srcs: ["init_phoenix.cpp"],
+    srcs: ["init_surya.cpp"],
     recovery_available: true,
 }

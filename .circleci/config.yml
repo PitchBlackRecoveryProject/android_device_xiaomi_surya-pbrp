@@ -11,8 +11,8 @@ jobs:
       SECRET_BR: 'android-10.0'
       MAINTAINER: 'PBRP Team'
       VENDOR: 'xiaomi'
-      CODENAME: 'phoenix'
-      BUILD_LUNCH: 'omni_phoenix-eng'
+      CODENAME: 'surya'
+      BUILD_LUNCH: 'omni_surya-eng'
       FLAVOR: "eng"
       TEST_BUILD: 'true'
       #EXTRA_CMD: "rm -rf build/soong && git clone https://github.com/PitchBlackRecoveryProject/android_build_soong -b android-10-fixes build/soong && rm -rf vendor/pb && git clone https://github.com/PitchBlackRecoveryProject/vendor_pb -b pb-10.0 vendor/pb"
