@@ -30,7 +30,7 @@ PRODUCT_COPY_FILES += $(call find-copy-subdir-files,*,$(LOCAL_PATH)/recovery/roo
 PRODUCT_DEVICE := surya
 PRODUCT_NAME := omni_surya
 PRODUCT_BRAND := Xiaomi
-PRODUCT_MODEL := Poco X2
+PRODUCT_MODEL := POCO X3 NFC
 PRODUCT_MANUFACTURER := Xiaomi
 
 # HACK: Set vendor patch level
