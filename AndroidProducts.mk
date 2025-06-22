@@ -15,6 +15,4 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/omni_surya.mk
-
-COMMON_LUNCH_CHOICES := omni_surya-eng
+    $(LOCAL_DIR)/twrp_surya.mk

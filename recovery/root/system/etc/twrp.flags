@@ -4,11 +4,7 @@
 
 # mount point  fstype  device                             device2                flags
 
-system		/system			ext4
-vendor		/vendor			ext4		display="Vendor"
-product		/product		ext4		display="Product"
 /metadata      ext4    /dev/block/bootdevice/by-name/metadata                    flags=display="Metadata";backup=1;wrappedkey
-/data          f2fs    /dev/block/bootdevice/by-name/userdata                    flags=fileencryption=ice:aes-256-cts;wrappedkey;keydirectory=/metadata/vold/metadata_encryption
 /boot          emmc    /dev/block/bootdevice/by-name/boot
 /dtbo          emmc    /dev/block/bootdevice/by-name/dtbo                        flags=backup=1;display="Dtbo";flashimg=1
 /cache         ext4    /dev/block/bootdevice/by-name/cache
@@ -25,8 +21,7 @@ product		/product		ext4		display="Product"
 /efsg          emmc    /dev/block/bootdevice/by-name/fsg                         flags=backup=1;subpartitionof=/efs1
 /persist       ext4    /dev/block/bootdevice/by-name/persist                     flags=display="Persist"
 /persist_image emmc    /dev/block/bootdevice/by-name/persist                     flags=display="Persist";flashimg=1
-/vbmeta        emmc     /dev/block/bootdevice/by-name/vbmeta                     flags=display="VBmeta";backup=1;flashimg=1
 
 # Removable storage
-/usb_otg       vfat    /dev/block/sdg1                    /dev/block/sdg         flags=fsflags=utf8;display="USB-OTG";storage;wipeingui;removable
-/external_sd   vfat     /dev/block/mmcblk0p1  /dev/block/mmcblk0   flags=display="MicroSD";storage;wipeingui;removable;
+/usb_otg	vfat    /dev/block/sdg1                 /dev/block/sdg		flags=fsflags=utf8;display="USB-Storage";storage;wipeingui;removable
+/sdcard1	vfat    /dev/block/mmcblk0p1  		/dev/block/mmcblk0	flags=display="MicroSD Card";storage;wipeingui;removable
