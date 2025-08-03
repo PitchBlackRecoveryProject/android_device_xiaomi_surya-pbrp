@@ -108,7 +108,8 @@ BOARD_MAIN_PARTITION_LIST := \
 	system \
 	system_ext \
 	vendor \
-	product
+	product \
+        odm
 
 # File systems
 TARGET_USERIMAGES_USE_EXT4 := true
