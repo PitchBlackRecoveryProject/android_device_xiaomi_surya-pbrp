@@ -1,4 +1,5 @@
-name: PBRP Organization CI
+name: PBRP Organization CI (Optimized Speed)
+
 on:
   workflow_dispatch:
     inputs:
@@ -22,23 +23,52 @@ env:
   SFPassword: ${{ secrets.SFPassword }}
   SFUserName: ${{ secrets.SFUserName }}
   TARGET: "pbrp"
+  
+  # 
+  CCACHE_DIR: ${{ github.workspace }}/.ccache
+  CCACHE_MAX_SIZE: 5G 
 
 jobs:
   PBRP_CI:
     if: "(! contains(toJSON(github.event.commits.*.message), '[skip-ci]'))"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest 
 
     steps:
-       - name: Auto Adapt Manifest
-         # /* if your branch name is other than the one which you dispatched workflow from then set it manually in the place of ${GITHUB_REF##*/}" */ 
-         run: echo "MANIFEST=https://github.com/PitchBlackRecoveryProject/manifest_pb -b ${GITHUB_REF##*/}" >> $GITHUB_ENV
+       # 
+       - name: Restore ccache
+         uses: actions/cache@v3
+         with:
+           path: ${{ env.CCACHE_DIR }}
+           # 
+           key: ${{ runner.os }}-ccache-pbrp-${{ github.ref_name }}-${{ hashFiles('build/make/core/build_id.mk') }}
+           restore-keys: |
+             ${{ runner.os }}-ccache-pbrp-${{ github.ref_name }}-
 
-       - name: Export Vars
+       - name: Configure ccache
+         run: |
+           echo "CCACHE_EXEC=/usr/bin/ccache" >> $GITHUB_ENV
+           echo "USE_CCACHE=1" >> $GITHUB_ENV
+           ccache -M ${{ env.CCACHE_MAX_SIZE }}
+           ccache -z # Reset statistik cache sebelum sinkronisasi
+
+       # --- PREP & CHECKS ---
+       - name: Auto Adapt Manifest
+         # 
+         run: echo "MANIFEST=https://github.com/PitchBlackRecoveryProject/manifest_pb -b ${{ github.ref_name }}" >> $GITHUB_ENV
+
+       - name: Export Release Vars
          run: |
               if [[ ${BUILD_RELEASE_TYPE} == "TEST" ]]; then echo "TEST_BUILD=true"  >> $GITHUB_ENV;fi
               if [[ ${BUILD_RELEASE_TYPE} == "BETA" ]]; then echo "BETA_BUILD=true"  >> $GITHUB_ENV;fi
               if [[ ${BUILD_RELEASE_TYPE} == "OFFICIAL" ]]; then echo "PB_OFFICIAL=true"  >> $GITHUB_ENV;fi
 
+       - name: Set Swap Space
+         # 
+         uses: pierotofy/set-swap-space@master
+         with:
+           swap-size-gb: 12
+       
+       # 
        - name: Checkout Cleaning Up Runner Repo
          uses: actions/checkout@v2
          with:
@@ -48,11 +78,8 @@ jobs:
            path: .github/actions/Cleaner
        - name: Cleaning
          uses: ./.github/actions/Cleaner
-       - name: Set Swap Space
-         uses: pierotofy/set-swap-space@master
-         with:
-           swap-size-gb: 12
-
+       
+       # 
        - name: Checkout Recovery Compiler Repo
          uses: actions/checkout@v2
          with:
@@ -63,8 +90,16 @@ jobs:
        - name: Recovery Compilation
          uses: ./.github/actions/Compiler
        
+       - name: Save ccache
+         uses: actions/cache@v3
+         with:
+           path: ${{ env.CCACHE_DIR }}
+           key: ${{ runner.os }}-ccache-pbrp-${{ github.ref_name }}-${{ hashFiles('build/make/core/build_id.mk') }}
+           if: always() 
+
        - name: Release Builds 
          run: |
               sudo apt-get update && sudo apt-get install sshpass -y
               cd $BuildPath 
               bash vendor/utils/pb_deploy.sh ${BUILD_RELEASE_TYPE} ${VENDOR} ${CODENAME}
+              
