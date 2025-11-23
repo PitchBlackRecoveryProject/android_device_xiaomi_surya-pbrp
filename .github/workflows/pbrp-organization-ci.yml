@@ -32,9 +32,15 @@ jobs:
     if: "(! contains(toJSON(github.event.commits.*.message), '[skip-ci]'))"
     runs-on: ubuntu-latest 
 
-    steps: # <-- Perhatikan Indentasi di sini (8 spasi dari awal baris)
+    steps:
+      # --- BARIS INI DITAMBAHKAN UNTUK MENGINSTALL CCACHE ---
+      - name: Install ccache
+        run: |
+          sudo apt-get update
+          sudo apt-get install ccache -y
+
       # --- SETUP CACHE ---
-      - name: Restore ccache # <-- Indentasi 10 spasi
+      - name: Restore ccache
         uses: actions/cache@v3
         with:
           path: ${{ env.CCACHE_DIR }}
@@ -44,6 +50,7 @@ jobs:
 
       - name: Configure ccache
         run: |
+          # Sekarang ccache sudah terinstal
           echo "CCACHE_EXEC=/usr/bin/ccache" >> $GITHUB_ENV
           echo "USE_CCACHE=1" >> $GITHUB_ENV
           ccache -M ${{ env.CCACHE_MAX_SIZE }}
@@ -64,9 +71,9 @@ jobs:
         with:
           swap-size-gb: 12
       
-      # --- Checkout & Cleaning (Diperbarui ke actions/checkout@v4) ---
+      # --- Checkout & Cleaning ---
       - name: Checkout Cleaning Up Runner Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Diperbarui ke v4
         with:
           repository: PitchBlackRecoveryProject/Cleaner
           ref: main
@@ -75,9 +82,9 @@ jobs:
       - name: Cleaning
         uses: ./.github/actions/Cleaner
       
-      # --- Checkout Compiler (Diperbarui ke actions/checkout@v4) ---
+      # --- Checkout Compiler ---
       - name: Checkout Recovery Compiler Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Diperbarui ke v4
         with:
           repository: erwinabs/Compiler
           ref: production
